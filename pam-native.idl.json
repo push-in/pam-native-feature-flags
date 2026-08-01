@@ -1,0 +1,28 @@
+{
+    "$schema": "vendor/pushinbr/pam-native-plugin-kit/resources/pam-native.idl.schema.json",
+    "version": 1,
+    "namespace": "Pam.FeatureFlags",
+    "enums": {
+        "FlagValueKind": {
+            "Boolean": 1,
+            "Integer": 2,
+            "Decimal": 3,
+            "Text": 4
+        },
+        "EvaluationReason": {
+            "DefaultValue": 1,
+            "TargetingRule": 2,
+            "PercentageRollout": 3,
+            "OverrideValue": 4,
+            "CachedSnapshot": 5
+        }
+    },
+    "records": {
+        "Evaluation": {
+            "key": "string",
+            "kind": "FlagValueKind",
+            "reason": "EvaluationReason",
+            "rule": "string?"
+        }
+    }
+}
