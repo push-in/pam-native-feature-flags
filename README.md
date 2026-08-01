@@ -3,6 +3,11 @@
 Typed feature flags with deterministic targeting, percentage rollouts, local
 overrides, exposure events and offline native snapshots.
 
+```bash
+composer require pushinbr/pam-native-feature-flags
+pam mobile prepare
+```
+
 ```php
 $provider = new InMemoryFlagProvider([
     new FlagDefinition(
