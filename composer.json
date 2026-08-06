@@ -2,7 +2,7 @@
     "name": "pushinbr/pam-native-feature-flags",
     "description": "Typed targeting, deterministic rollouts and offline feature-flag snapshots for PAM Native.",
     "type": "pam-native-plugin",
-    "license": "BUSL-1.1",
+    "license": "Apache-2.0",
     "require": {
         "php": "^8.4",
         "pushinbr/pam-native":"^0.6.1"
