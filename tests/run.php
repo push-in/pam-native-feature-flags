@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+$packageAutoload = dirname(__DIR__).'/vendor/autoload.php';
+if (is_file($packageAutoload)) {
+    require $packageAutoload;
+}
+
 $roots = [
     'Pam\\Native\\FeatureFlags\\' => dirname(__DIR__).'/src/',
     'Pam\\Native\\Testing\\' => dirname(__DIR__, 2).'/pam-native-testing/src/',
