@@ -8,7 +8,7 @@
         "pushinbr/pam-native":"^0.8.0"
     },
     "require-dev": {
-        "pushinbr/pam-native-testing": "^0.1.0"
+        "pushinbr/pam-native-testing": "^0.2.0"
     },
     "autoload": {
         "psr-4": {
