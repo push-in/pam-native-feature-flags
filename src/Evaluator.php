@@ -8,6 +8,10 @@ final class Evaluator
 {
     public function evaluate(FlagDefinition $flag, EvaluationContext $context): Evaluation
     {
+        if ($flag->state === FlagState::Disabled) {
+            return new Evaluation($flag->key, $flag->defaultValue, EvaluationReason::KillSwitch);
+        }
+
         foreach ($flag->rules as $rule) {
             if ($rule->matches($context)) {
                 return new Evaluation(

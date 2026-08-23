@@ -82,7 +82,11 @@ final class JsonFlagProvider implements FlagProvider
                     self::value($allocation['value'] ?? null, "flag {$key} rollout value"),
                 );
             }
-            $definitions[] = new FlagDefinition($key, $default, $rules, $rollout);
+            $state = $flag['state'] ?? FlagState::Enabled->value;
+            if (!is_int($state) || FlagState::tryFrom($state) === null) {
+                throw new InvalidArgumentException("Flag {$key} contains an invalid state.");
+            }
+            $definitions[] = new FlagDefinition($key, $default, $rules, $rollout, FlagState::from($state));
         }
         return new self(new InMemoryFlagProvider($definitions));
     }

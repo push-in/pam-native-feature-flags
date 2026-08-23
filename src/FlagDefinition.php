@@ -14,6 +14,7 @@ final readonly class FlagDefinition
         public FlagValue $defaultValue,
         public array $rules = [],
         public array $rollout = [],
+        public FlagState $state = FlagState::Enabled,
     ) {
         if (preg_match('/^[a-z][a-z0-9._-]{0,127}$/D', $key) !== 1) {
             throw new InvalidArgumentException('Feature flag keys must be safe lowercase identifiers.');

@@ -17,7 +17,9 @@ pam doctor --fix
 
 
 Typed feature flags with deterministic targeting, percentage rollouts, local
-overrides, exposure events and offline native snapshots.
+overrides, exposure events, integer kill switches and offline native snapshots.
+Production snapshots can be authenticated with Ed25519, bounded to one MiB,
+expired locally, and pinned to an explicit key-id allowlist before parsing.
 
 ```bash
 pam add feature-flags
@@ -68,6 +70,7 @@ Use `pam packages` to inspect availability and `pam remove feature-flags` to uni
 | `FlagDefinition` / `TargetingRule` | Declare defaults, rules, and rollouts. |
 | `EvaluationContext` | Provide a stable bucketing identifier and attributes. |
 | `SnapshotStore` | Persist bounded offline-native snapshots. |
+| `SignedFlagSnapshot` | Verify revisioned, expiring Ed25519 configuration envelopes before activation. |
 | `FlagProvider` | Supply definitions from memory, JSON, or a custom backend. |
 
 All coded states, kinds, and variants are sequential integer-backed enums. Use enum cases in application code; do not depend on raw wire numbers.
@@ -77,6 +80,7 @@ All coded states, kinds, and variants are sequential integer-backed enums. Use e
 - Use a stable, non-secret bucketing identifier across sessions.
 - Emit exposure events once per product decision, not every render.
 - Always provide a safe default for offline and malformed configurations.
+- Sign remote snapshots, pin trusted public keys in the app, reject revision rollback, and activate only after verification.
 - Run `pam doctor`, `pam test`, and a signed release build on every supported platform.
 - Exercise denial, cancellation, backgrounding, process restart, and offline behavior before release.
 

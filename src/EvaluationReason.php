@@ -11,4 +11,5 @@ enum EvaluationReason: int
     case PercentageRollout = 3;
     case OverrideValue = 4;
     case CachedSnapshot = 5;
+    case KillSwitch = 6;
 }

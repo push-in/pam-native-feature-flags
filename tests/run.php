@@ -34,6 +34,8 @@ use Pam\Native\FeatureFlags\InMemoryFlagProvider;
 use Pam\Native\FeatureFlags\JsonFlagProvider;
 use Pam\Native\FeatureFlags\PercentageRollout;
 use Pam\Native\FeatureFlags\SnapshotStore;
+use Pam\Native\FeatureFlags\SignedFlagSnapshot;
+use Pam\Native\FeatureFlags\FlagState;
 use Pam\Native\FeatureFlags\TargetingRule;
 use Pam\Native\Testing\NativeTestHarness;
 
@@ -130,6 +132,45 @@ $test('parses strict provider-neutral JSON contracts', static function () use ($
         $expect(false, 'String-coded value kind unexpectedly passed.');
     } catch (InvalidArgumentException $exception) {
         $expect(str_contains($exception->getMessage(), 'Invalid flag bad default'));
+    }
+});
+
+$test('applies an integer kill switch before targeting and rollout', static function () use ($expect): void {
+    $flag = new FlagDefinition(
+        'checkout.new',
+        FlagValue::boolean(false),
+        rollout: [new PercentageRollout(10_000, FlagValue::boolean(true))],
+        state: FlagState::Disabled,
+    );
+    $evaluation = (new Evaluator())->evaluate($flag, new EvaluationContext('user-1'));
+    $expect($evaluation->value->value === false);
+    $expect($evaluation->reason === EvaluationReason::KillSwitch);
+});
+
+$test('accepts only trusted, current Ed25519 snapshots', static function () use ($expect): void {
+    $keypair = sodium_crypto_sign_keypair();
+    $public = sodium_crypto_sign_publickey($keypair);
+    $secret = sodium_crypto_sign_secretkey($keypair);
+    $payload = json_encode(['version' => 1, 'flags' => []], JSON_THROW_ON_ERROR);
+    $revision = 9;
+    $expiry = 2_000_000_000;
+    $keyId = 'production-2026';
+    $message = "pam-native-feature-flags\0{$revision}\0{$expiry}\0{$keyId}\0{$payload}";
+    $envelope = json_encode([
+        'revision' => $revision,
+        'expiresAtUnix' => $expiry,
+        'payload' => base64_encode($payload),
+        'keyId' => $keyId,
+        'signature' => base64_encode(sodium_crypto_sign_detached($message, $secret)),
+    ], JSON_THROW_ON_ERROR);
+    $snapshot = SignedFlagSnapshot::fromJson($envelope, [$keyId => $public], 1_900_000_000);
+    $expect($snapshot->revision === 9);
+    $expect($snapshot->provider()->definition('missing') === null);
+
+    try {
+        SignedFlagSnapshot::fromJson(str_replace('production-2026', 'unknown-key', $envelope), [$keyId => $public], 1_900_000_000);
+        $expect(false, 'Untrusted key unexpectedly passed.');
+    } catch (InvalidArgumentException) {
     }
 });
 
