@@ -1,20 +1,54 @@
+<!-- pam:product-page:start -->
+<div align="center">
+
 # PAM Native Feature Flags
 
-## Start here
+**Ship safely with typed targeting and deterministic rollouts.**
 
-This is a Composer extension for PAM Native. Install the PAM Runtime, create a native project, and then add this package through PAM’s verified Composer toolchain:
+Evaluate flags locally from signed or cached snapshots, keep variants integer-backed, and make rollout behavior testable offline.
+
+[![Latest version](https://img.shields.io/packagist/v/pushinbr/pam-native-feature-flags?style=flat-square&label=stable)](https://packagist.org/packages/pushinbr/pam-native-feature-flags)
+[![CI](https://img.shields.io/github/actions/workflow/status/push-in/pam-native-feature-flags/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/push-in/pam-native-feature-flags/actions)
+![PHP](https://img.shields.io/badge/PHP-8.5-777BB4?style=flat-square&logo=php&logoColor=white)
+![Android](https://img.shields.io/badge/Android-API%2026%2B-3DDC84?style=flat-square&logo=android&logoColor=white)
+![iOS](https://img.shields.io/badge/iOS-15%2B-000000?style=flat-square&logo=apple&logoColor=white)
+
+**[Documentation](https://push-in.github.io/pam-docs/native/overview/) · [Quick start](#quick-start) · [What you can build](#what-you-can-build) · [PAM ecosystem](https://push-in.github.io/pam-docs/ecosystem/) · [Issues](https://github.com/push-in/pam-native-feature-flags/issues)**
+
+</div>
+
+---
+
+## Why PAM Native Feature Flags
+
+Evaluate flags locally from signed or cached snapshots, keep variants integer-backed, and make rollout behavior testable offline. The public API is strictly typed for PHP 8.5; expensive or frame-sensitive work stays in Rust or the platform SDK instead of crossing the application boundary every frame.
+
+| | |
+| --- | --- |
+| **Best for** | A focused capability you can add to any PAM Native application |
+| **Native path** | Deterministic local evaluator |
+| **Application model** | Composer package + generated native integration |
+| **Design rule** | Independent module; no feed, vertical, or application template bundled |
+
+## What you can build
+
+- Percentage and cohort rollouts
+- Kill switches for risky native capabilities
+- Offline experiments with deterministic assignment
+
+## Quick start
+
+Already have a PAM Native project? Add only this capability:
 
 ```bash
-curl --proto '=https' --proto-redir '=https' --tlsv1.2 \
-    --connect-timeout 15 --max-time 60 --max-filesize 1048576 -fsSL \
-    https://github.com/push-in/pam/releases/latest/download/install.sh | sh
-
-pam init my-app --template native
-cd my-app
 pam composer require pushinbr/pam-native-feature-flags
 pam doctor --fix
 ```
 
+New to PAM? Follow the **[five-minute PAM Native setup](https://push-in.github.io/pam-docs/native/overview/)** once, then return here. Your application stays a normal Composer project with a committed lockfile.
+<!-- pam:product-page:end -->
+
+## See it in action
 
 Typed feature flags with deterministic targeting, percentage rollouts, local
 overrides, exposure events, integer kill switches and offline native snapshots.
@@ -55,7 +89,6 @@ Rollouts use SHA-256 over `flag-key + NUL + bucketing-id`, then map the first
 unsigned 32 bits into `0...9999`. Golden tests keep PHP, Kotlin and Swift
 assignments identical. Snapshot payloads are bounded to one MiB.
 
-
 ## What installation does
 
 `pam add feature-flags` resolves the official compatible package, performs a non-mutating Composer preflight, updates the normal `composer.json` and `composer.lock`, refreshes generated native integration when required, and leaves the project ready for `pam doctor` validation.
@@ -93,7 +126,7 @@ All coded states, kinds, and variants are sequential integer-backed enums. Use e
 
 ## Compatibility and support
 
-This package targets PAM Native `0.6.x`, Android API 26+, and iOS 15+ unless a platform-specific section above states a stricter requirement. Platform SDKs, credentials, entitlements, physical hardware, and store configuration remain application responsibilities.
+This package targets PAM Native `0.8.x`, Android API 26+, and iOS 15+ unless a platform-specific section above states a stricter requirement. Platform SDKs, credentials, entitlements, physical hardware, and store configuration remain application responsibilities.
 
 - [PAM documentation](https://push-in.github.io/pam-docs/introduction/)
 - [PAM Native overview](https://push-in.github.io/pam-docs/native/overview/)
